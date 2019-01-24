@@ -16,3 +16,26 @@ html(lang="en")
         form(action="" class="usernameForm")
             input.form-control(type="text" id="usernameInput" placeholder="username")
             button(type="submit" id="createUserBtn").btn-btn-primary Join Chat 
+
+        div(class="mainContainer")
+
+            div.channelsAndUserOnlineContainer
+                h1 Make Chat
+                div.channels
+                    h2.channelsLabel Channels 
+                    div.newChannelForm
+                        input(id="newChannelInput" placeholder="New Channel")
+                        button(type="submit" id="newChannelBtn")
+                    div.channel-current General 
+                h2 Online Users
+                div.usersOnline
+
+            div.chatContainer 
+                div.chatContainerFluid
+                    div.messageContainer
+                        h2 Messages 
+                    div.textChatDivide
+                    div.chatBox 
+                        textarea#chatInput(placeholder="Type a message")
+                        button#sendChatBtn.btn(type="submit")
+
