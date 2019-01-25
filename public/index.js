@@ -56,4 +56,21 @@ $(document).ready( () => {
         )
     });
 
+    // Output online users 
+    socket.on('get online users', (onlineUsers) => {
+        // You may have not have seen this for loop before. It's syntax is for(key in obj)
+        // Our usernames are keys in the object of onlineUsers. 
+        for(username in onlineUsers) {
+            $(".usersOnline").append(`<p class="userOnline">${username}</p>`);
+        }
+    })
+
+    //Refresh the online user list
+    socket.on('user has left', (onlineUsers) => {
+        $('.usersOnline').empty();
+        for(username in onlineUsers){
+        $('.usersOnline').append(`<p>${username}</p>`);
+        }
+    });
+
   })
