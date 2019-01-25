@@ -27,15 +27,28 @@ $(document).ready( () => {
     $("#sendChatBtn").click((e) => {
         e.preventDefault();
         // Get the message text value 
+        // let message = $('#chatInput').val();
+        // // Make sure it's not empty
+        // if (message.length > 0) {
+        //     // Emit the message with the current user to the server 
+        //     socket.emit('new message', {
+        //         sender: currentUser,
+        //         message: message
+        //     });
+        //     $("#chatInput").val("");
+        // }
+
+        //   // Get the client's channel
+        let channel = $('.channel-current').text();
         let message = $('#chatInput').val();
-        // Make sure it's not empty
-        if (message.length > 0) {
-            // Emit the message with the current user to the server 
+        if(message.length > 0){
             socket.emit('new message', {
-                sender: currentUser,
-                message: message
+            sender : currentUser,
+            message : message,
+            //Send the channel over to the server
+            channel : channel
             });
-            $("#chatInput").val("");
+            $('#chatInput').val("");
         }
     });
 
@@ -106,5 +119,18 @@ $(document).ready( () => {
         `);
         });   
    })
+
+   socket.on('new message', (data) => {
+    //Only append the message if the user is currently in that channel
+    let currentChannel = $('.channel-current').text();
+    if(currentChannel == data.channel){
+      $('.messageContainer').append(`
+        <div class="message">
+          <p class="messageUser">${data.sender}: </p>
+          <p class="messageText">${data.message}</p>
+        </div>
+      `);
+    }
+  })
 
   })
