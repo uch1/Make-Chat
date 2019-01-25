@@ -1,9 +1,16 @@
 $(document).ready( () => {
-    //Connect to the socket.io server
+    //index.js
     const socket = io.connect();
-
-    // Keep track of the current user 
     let currentUser;
+    socket.emit('get online users');
+    //Each user should be in the general channel by default.
+    socket.emit('user changed channel', "General");
+
+    //Users can change the channel by clicking on its name.
+    $(document).on('click', '.channel', (e)=>{
+    let newChannel = e.target.textContent;
+    socket.emit('user changed channel', newChannel);
+    });
 
     $("#createUserBtn").click((e) => {
         e.preventDefault();
