@@ -39,6 +39,17 @@ $(document).ready( () => {
         }
     });
 
+     // Create a new channel 
+     $("#newChannelBtn").click(() => {
+        let newChannel = $("#newChannelInput").val();
+
+        if (newChannel.length > 0) {
+            // Emit the new channel to the server 
+            socket.emit('new channel', newChannel);
+            $("#newChannelInput").val("");
+        }
+    })
+
     // Socket Listeners 
     socket.on('new user', (username) => {
         console.log(`✋ ${username} has joined the chat! ✋`);
@@ -73,15 +84,27 @@ $(document).ready( () => {
         }
     });
 
-    // Create a new channel 
-    $("#newChannelBtn").click(() => {
-        let newChannel = $("#newChannelInput").val();
+   // Add the new channel to the channels list (Fires for all clients)
+   socket.on('new channel', (newChannel) => {
+       $('.channels').append(`<div class="channel">${newChannel}</div>`);
+   });
 
-        if (newChannel.length > 0) {
-            // Emit the new channel to the server 
-            socket.emit('new channel', newChannel);
-            $("#newChannelInput").val("");
-        }
-    })
+   // Make the channel joined the current channel. Then load the messages.
+   // This only fires for the client who made the channel. 
+   socket.on('user changed channel', (data) => {
+        $('.channel-current').addClass('channel');
+        $('.channel-current').removeClass('channel-current');
+        $(`.channel:contains('${data.channel}')`).addClass('channel-current');
+        $('.channel-current').removeClass('channel');
+        $('.message').remove();
+        data.messages.forEach((message) => {
+        $('.messageContainer').append(`
+            <div class="message">
+            <p class="messageUser">${message.sender}: </p>
+            <p class="messageText">${message.message}</p>
+            </div>
+        `);
+        });   
+   })
 
   })
